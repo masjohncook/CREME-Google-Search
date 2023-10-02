@@ -30,3 +30,6 @@ apps/static/assets/yarn.lock
 apps/static/assets/.temp
 
 api.key
+result.json
+result_metasploit.json
+result_non_metasploit.json
