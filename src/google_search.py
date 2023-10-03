@@ -19,6 +19,7 @@ import json
 import time
 from bs4 import BeautifulSoup
 import requests
+import logging
 ############################################################################
 
 __author__ = 'masjohncook'
@@ -34,7 +35,11 @@ __status__ = 'None'
 
 class GSearch():
     def __init__(self):
-        pass
+        self.setupLogging()
+        self.logger = logging.getLogger(self.__class__.__name__) 
+    
+    def setupLogging(self):
+        logging.basicConfig(filename='search.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
     
     def loadLinks(self, json_file):
         try:
@@ -42,15 +47,15 @@ class GSearch():
                 vms = json.load(f)
             return vms
         except FileNotFoundError:
-            print(f"Error: {json_file} not found.")
+            self.logger.info(f"Error: {json_file} not found.")
             return {'link_list':[]}
         except json.JSONDecodeError:
-            print(f"Error: {json_file} is not valid JSON file")
+            self.logger.debug(f"Error: {json_file} is not valid JSON file")
             return {'link_list':[]}
     
     def searching(self, query):
         wl_list = []
-        num_of_results = 5
+        num_of_results = 3
         qry = "walkthrough {}".format(query)
         while True:
             try:
@@ -60,10 +65,10 @@ class GSearch():
             except Exception as e:
                 error_message = str(e)
                 if "429 Client Error: Too Many Requests" in error_message:
-                    print("Too many request, sleep for 10 minutes")
-                    time.sleep(600)
+                    self.logger.info("Too many request, sleep for 10 minutes")
+                    time.sleep(900)
                 else:
-                    print(f"Error occurred while searching: {e}")
+                    self.logger.info(f"Error occurred while searching: {e}")
                     break
         return wl_list
         
@@ -72,7 +77,7 @@ class GSearch():
             response = requests.get(url)
             response.raise_for_status()
         except requests.RequestException as e:
-            print(f"Error accessing {url}: {e}")
+            self.logger.info(f"Error accessing {url}: {e}")
             return False
         
         soup = BeautifulSoup(response.text, 'html.parser')
@@ -84,12 +89,28 @@ class GSearch():
         return False
     
     def saveToJsonMetasploit(self, data, filename='result_metasploit.json'):
+        try:
+            with open(filename, 'r') as f:
+                existing_data = json.load(f)
+        except FileNotFoundError:
+            existing_data = []
+            
+        existing_data.append(data)
+        
         with open(filename, 'w') as f:
-            json.dump(data, f)
+            json.dump(existing_data, f)
             
     def saveToJsonNonMetasploit(self, data, filename='result_non_metasploit.json'):
+        try:
+            with open(filename, 'r') as f:
+                existing_data = json.load(f)
+        except FileNotFoundError:
+            existing_data = []
+            
+        existing_data.append(data)
+        
         with open(filename, 'w') as f:
-            json.dump(data, f)
+            json.dump(existing_data, f)
     
     
     def main(self, input_file):
@@ -100,7 +121,7 @@ class GSearch():
                 print("{}. {}".format(no, vms[0]))
                 list_wl_link = self.searching(vms[0])
                 no += 1
-                time.sleep(20)
+                time.sleep(60)
                 for link in list_wl_link:
                     print(link)
                     if self.checkForTerm(link):
@@ -110,8 +131,6 @@ class GSearch():
                     else:
                         print(f"The term 'metasploit' was not found at {link}")
                         self.saveToJsonNonMetasploit({'vm': vms[0], 'link': link})
-
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Search Google and check the link fot metasploit related info")
