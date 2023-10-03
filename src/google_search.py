@@ -39,7 +39,7 @@ class GSearch():
         self.logger = logging.getLogger(self.__class__.__name__) 
     
     def setupLogging(self):
-        logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+        logging.basicConfig(filename='search.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
     
     def loadLinks(self, json_file):
         try:
@@ -57,11 +57,12 @@ class GSearch():
         wl_list = []
         num_of_results = 3
         qry = "walkthrough {}".format(query)
-        while True:
+        success = False
+        while not success:
             try:
                 for results in search(qry, num_results=num_of_results):
                     wl_list.append(results)
-                break
+                success = True
             except Exception as e:
                 error_message = str(e)
                 if "429 Client Error: Too Many Requests" in error_message:
