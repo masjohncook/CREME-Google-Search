@@ -39,7 +39,7 @@ class GSearch():
         self.logger = logging.getLogger(self.__class__.__name__) 
     
     def setupLogging(self):
-        logging.basicConfig(filename='search.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+        logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
     
     def loadLinks(self, json_file):
         try:
@@ -50,7 +50,7 @@ class GSearch():
             self.logger.info(f"Error: {json_file} not found.")
             return {'link_list':[]}
         except json.JSONDecodeError:
-            self.logger.debug(f"Error: {json_file} is not valid JSON file")
+            self.logger.info(f"Error: {json_file} is not valid JSON file")
             return {'link_list':[]}
     
     def searching(self, query):
@@ -65,6 +65,7 @@ class GSearch():
             except Exception as e:
                 error_message = str(e)
                 if "429 Client Error: Too Many Requests" in error_message:
+                    print("Too many request, sleep for 10 minutes")
                     self.logger.info("Too many request, sleep for 10 minutes")
                     time.sleep(900)
                 else:
@@ -126,10 +127,12 @@ class GSearch():
                     print(link)
                     if self.checkForTerm(link):
                         print(f"The term 'metasploit' was found at {link}")
+                        self.logger.info(f"The term 'metasploit' was found at {link}")
                         self.saveToJsonMetasploit({'vm': vms[0], 'link': link})
                         break
                     else:
                         print(f"The term 'metasploit' was not found at {link}")
+                        self.logger.info(f"The term 'metasploit' was not found at {link}")
                         self.saveToJsonNonMetasploit({'vm': vms[0], 'link': link})
 
 if __name__ == "__main__":
