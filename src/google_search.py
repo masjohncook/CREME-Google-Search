@@ -66,8 +66,8 @@ class GSearch():
             except Exception as e:
                 error_message = str(e)
                 if "429 Client Error: Too Many Requests" in error_message:
-                    print("Too many request, sleep for 10 minutes")
-                    self.logger.info("Too many request, sleep for 90 minutes")
+                    print("Too many request, sleep for 120 minutes")
+                    self.logger.info("Too many request, sleep for 120 minutes")
                     time.sleep(7200)
                 else:
                     self.logger.info(f"Error occurred while searching: {e}")
