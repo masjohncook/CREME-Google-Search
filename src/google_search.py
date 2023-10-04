@@ -123,7 +123,7 @@ class GSearch():
                 print("{}. {}".format(no, vms[0]))
                 list_wl_link = self.searching(vms[0])
                 no += 1
-                time.sleep(60)
+                time.sleep(180)
                 for link in list_wl_link:
                     print(link)
                     if self.checkForTerm(link):
