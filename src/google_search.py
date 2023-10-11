@@ -118,23 +118,27 @@ class GSearch():
     def main(self, input_file):
         vm_list = self.loadLinks(input_file).get('link_list', [])
         no = 1
-        for vms in vm_list:
-            if vms:
-                print("{}. {}".format(no, vms[0]))
-                list_wl_link = self.searching(vms[0])
-                no += 1
-                time.sleep(180)
-                for link in list_wl_link:
-                    print(link)
-                    if self.checkForTerm(link):
-                        print(f"The term 'metasploit' was found at {link}")
-                        self.logger.info(f"The term 'metasploit' was found at {link}")
-                        self.saveToJsonMetasploit({'vm': vms[0], 'link': link})
-                        break
-                    else:
-                        print(f"The term 'metasploit' was not found at {link}")
-                        self.logger.info(f"The term 'metasploit' was not found at {link}")
-                        self.saveToJsonNonMetasploit({'vm': vms[0], 'link': link})
+        max_results = 50
+        total_entries = len(vm_list)
+        
+        for i in range(0, total_entries, max_results):
+            for vms in vm_list:
+                if vms:
+                    print("{}. {}".format(no, vms[0]))
+                    list_wl_link = self.searching(vms[0])
+                    no += 1
+                    time.sleep(180)
+                    for link in list_wl_link:
+                        print(link)
+                        if self.checkForTerm(link):
+                            print(f"The term 'metasploit' was found at {link}")
+                            self.logger.info(f"The term 'metasploit' was found at {link}")
+                            self.saveToJsonMetasploit({'vm': vms[0], 'link': link})
+                            break
+                        else:
+                            print(f"The term 'metasploit' was not found at {link}")
+                            self.logger.info(f"The term 'metasploit' was not found at {link}")
+                            self.saveToJsonNonMetasploit({'vm': vms[0], 'link': link})
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Search Google and check the link fot metasploit related info")
