@@ -1,6 +1,24 @@
-import json
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+'''
+@Filename : test.py
+@CreatedTime : 2023/10/11 17:21
 
-with open('all_link_lists.json', 'r') as f:
-    vms = json.load(f)
-    
-    print(vms['link_list'][0][0])
+
+This program has a function to test the Google search module
+
+'''
+
+
+############################################################################
+# Import modules
+############################################################################
+from googlesearch import search
+
+
+qry = "google scholar"
+num_of_results = 5
+
+
+for results in search(qry, num_results=num_of_results):
+    print(results)
