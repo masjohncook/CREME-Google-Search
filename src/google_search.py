@@ -129,7 +129,7 @@ class GSearch():
                     print("{}. {}".format(no, vms[0]))
                     list_wl_link = self.searching(vms[0])
                     no += 1
-                    time.sleep(180)
+                    time.sleep(60)
                     for link in list_wl_link:
                         print(link)
                         if self.checkForTerm(link):
@@ -141,6 +141,9 @@ class GSearch():
                             print(f"The term 'metasploit' was not found at {link}")
                             self.logger.info(f"The term 'metasploit' was not found at {link}")
                             self.saveToJsonNonMetasploit({'vm': vms[0], 'link': link})
+                    if no % max_results == 0 and  no != total_entries:
+                        print(f"Reached {max_results} searches, waiting for 120 minutes...")
+                        time.sleep(7200)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Search Google and check the link fot metasploit related info")
