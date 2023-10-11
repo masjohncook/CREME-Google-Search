@@ -122,7 +122,9 @@ class GSearch():
         total_entries = len(vm_list)
         
         for i in range(0, total_entries, max_results):
-            for vms in vm_list:
+            sublist = vm_list[i:i+max_results]
+            
+            for vms in sublist:
                 if vms:
                     print("{}. {}".format(no, vms[0]))
                     list_wl_link = self.searching(vms[0])
