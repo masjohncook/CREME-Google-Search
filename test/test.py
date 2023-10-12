@@ -16,7 +16,7 @@ This program has a function to test the Google search module
 from googlesearch import search
 
 
-qry = "walkthrough Matrix-Breakout: 2 Morpheus"
+qry = "walkthrough Matrix"
 num_of_results = 5
 
 
