@@ -32,4 +32,5 @@ apps/static/assets/.temp
 api.key
 result.json
 result_metasploit.json
-result_non_metasploit.json
+result_exploit.json
+result_non_mexploit.json

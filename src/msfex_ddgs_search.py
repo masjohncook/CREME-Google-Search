@@ -67,6 +67,7 @@ class GSearch():
                                             region='wt-wt', 
                                             safesearch='off', timelimit='y', max_results=num_of_results):
                         print(results['href'])
+                        self.logger.info(results['href'])
                         wl_list.append(results['href'])
                 success = True
             except Exception as e:
