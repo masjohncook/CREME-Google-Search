@@ -13,12 +13,8 @@ This program has a function to test the Google search module
 ############################################################################
 # Import modules
 ############################################################################
-from googlesearch import search
+from duckduckgo_search import DDGS
 
-
-qry = "walkthrough Matrix"
-num_of_results = 5
-
-
-for results in search(qry, num_results=num_of_results):
-    print(results)
+with DDGS() as ddgs:
+    for r in ddgs.text('metasploit', region='wt-wt', safesearch='off', timelimit='y', max_results=3):
+        print(r['href'])
