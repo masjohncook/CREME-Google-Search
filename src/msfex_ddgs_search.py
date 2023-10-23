@@ -154,7 +154,7 @@ class GSearch():
     def main(self, input_file):
         vm_list = self.loadLinks(input_file).get('link_list', [])
         no = 1
-        max_results = 50
+        max_results = 100
         total_entries = len(vm_list)
         
         for i in range(0, total_entries, max_results):
@@ -165,7 +165,7 @@ class GSearch():
                     print("{}. {}".format(no, vms[0]))
                     list_wl_link = self.searching(vms[0])
                     no += 1
-                    time.sleep(60)
+                    time.sleep(30)
                     for link in list_wl_link:
                         print(link)
                         if self.checkForMetasploit(link):
@@ -175,7 +175,7 @@ class GSearch():
                             break
                         elif self.checkForExploit(link):
                             print(f"The term 'exploit' was found at {link}")
-                            self.logger.info(f"The term 'metasploit' was found at {link}")
+                            self.logger.info(f"The term 'exploit' was found at {link}")
                             self.saveToJsonExploit({'vm': vms[0], 'link': link})
                             break
                         else:
